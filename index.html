@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPA Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+    }
+    .calculator {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 15px 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+    }
+    td {
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 600px) {
+      .calculator {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      table {
+        font-size: 12px;
+      }
+      th, td {
+        padding: 10px;
+      }
+      .form-group input {
+        font-size: 12px;
+      }
+      button {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+      .loader {
+        width: 20px;
+        height: 20px;
+        border-width: 3px;
+      }
+      .result {
+        font-size: 18px;
+      }
+      .overflow-x-auto {
+        overflow-x: auto;
+      }
+      .hint-table {
+        font-size: 12px;
+      }
+    }
+    .hint-table {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .developer-name {
+      font-size: 14px;
+      margin-top: 20px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>GPA Calculator SEE 2080</h1>
+    <div class="overflow-x-auto">
+      <table id="subjectTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Credit Hours</th>
+            <th>Theory Grade</th>
+            <th>Practical Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="subject" placeholder="Subject"></td>
+            <td><input type="number" class="creditHours" placeholder="CH"></td>
+            <td><input type="number" step="0.01" class="theoryGrade" placeholder="Theory"></td>
+            <td><input type="number" step="0.01" class="practicalGrade" placeholder="Practical"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button onclick="addSubjectRow()">Add Subject</button>
+    <button onclick="calculateGPA()">Calculate GPA</button>
+    <div class="loader" id="loader" style="display: none;"></div>
+    <div class="result" id="result"></div>
+  </div>
+  
+  <div class="hint-table">
+    <h2>GPA Ranges based on Percentage Scores</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Percentage (%)</th>
+          <th>GPA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>90 - 100</td>
+          <td>4.0</td>
+        </tr>
+        <tr>
+          <td>80 - 90</td>
+          <td>3.6</td>
+        </tr>
+        <tr>
+          <td>70 - 80</td>
+          <td>3.2</td>
+        </tr>
+        <tr>
+          <td>60 - 70</td>
+          <td>2.8</td>
+        </tr>
+        <tr>
+          <td>50 - 60</td>
+          <td>2.4</td>
+        </tr>
+        <tr>
+          <td>40 - 50</td>
+          <td>2.0</td>
+        </tr>
+        <tr>
+          <td>35 - 40</td>
+          <td>1.6</td>
+        </tr>
+        <tr>
+          <td>Below 35</td>
+          <td>NG</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="developer-name">
+    <p>Developed by Sujal Gautam</p>
+  </div>
+
+  <script>
+    function addSubjectRow() {
+      const subjectTable = document.getElementById('subjectTable').getElementsByTagName('tbody')[0];
+      const newRow = subjectTable.insertRow();
+      const cell1 = newRow.insertCell(0);
+      const cell2 = newRow.insertCell(1);
+      const cell3 = newRow.insertCell(2);
+      const cell4 = newRow.insertCell(3);
+      cell1.innerHTML = '<input type="text" class="subject" placeholder="Subject">';
+      cell2.innerHTML = '<input type="number" class="creditHours" placeholder="CH">';
+      cell3.innerHTML = '<input type="number" step="0.01" class="theoryGrade" placeholder="Theory">';
+      cell4.innerHTML = '<input type="number" step="0.01" class="practicalGrade" placeholder="Practical (Optional)">';
+    }
+
+    function calculateGPA() {
+      const subjectRows = document.querySelectorAll('#subjectTable tbody tr');
+      const subjects = [];
+
+      subjectRows.forEach(row => {
+        const subject = row.querySelector('.subject').value.trim();
+        const creditHours = parseFloat(row.querySelector('.creditHours').value);
+        const theoryGrade = parseFloat(row.querySelector('.theoryGrade').value);
+        const practicalGrade = parseFloat(row.querySelector('.practicalGrade').value) || null;
+
+        if (subject !== '' && !isNaN(creditHours) && creditHours > 0 && !isNaN(theoryGrade) && theoryGrade >= 0 && theoryGrade <= 4) {
+          const subjectData = { subject, creditHours, theoryGrade };
+          if (practicalGrade !== null && !isNaN(practicalGrade) && practicalGrade >= 0 && practicalGrade <= 4) {
+            subjectData.practicalGrade = practicalGrade;
+          }
+          subjects.push(subjectData);
+        }
+      });
+
+      if (subjects.length === 0) {
+        alert('Please enter at least one valid subject with credit hours and theory grade.');
+        return;
+      }
+
+      const loader = document.getElementById('loader');
+      const resultElement = document.getElementById('result');
+      loader.style.display = 'block';
+      resultElement.textContent = '';
+
+      setTimeout(() => {
+        let totalCreditPoints = 0;
+        let totalCreditHours = 0;
+
+        subjects.forEach(subject => {
+          const weightedGrade = (subject.theoryGrade + (subject.practicalGrade || subject.theoryGrade)) / 2;
+          totalCreditPoints += subject.creditHours * weightedGrade;
+          totalCreditHours += subject.creditHours;
+        });
+
+        const gpa = totalCreditPoints / totalCreditHours;
+        resultElement.textContent = `Your GPA is: ${gpa.toFixed(2)}`;
+        loader.style.display = 'none';
+      }, 2000); // Simulating a delay for loading animation
+    }
+  </script>
+</body>
+</html>
